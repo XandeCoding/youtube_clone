@@ -13,8 +13,8 @@
   <%= text_input f, :description %>
   <%= error_tag f, :description %>
 
-  <%= label f, :video_file, "Video", class: "control-label" %>
-  <%= file_input f, :video_file, required: true, class: "form-control" %>
+  <%= label f, :video_file %>
+  <%= file_input f, :video_file %>
   <%= error_tag f, :video_file %>
 
   <div>

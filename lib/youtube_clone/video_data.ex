@@ -55,6 +55,10 @@ defmodule YoutubeClone.VideoData do
     |> Repo.insert()
   end
 
+  def insert_video(video) do
+    Repo.insert(video)
+  end
+
   @doc """
   Updates a video.
 

@@ -7,7 +7,7 @@
               {description,"youtube_clone"},
               {modules,['Elixir.YoutubeClone',
                         'Elixir.YoutubeClone.Application',
-                        'Elixir.YoutubeClone.Repo',
+                        'Elixir.YoutubeClone.Repo','Elixir.YoutubeClone.Util',
                         'Elixir.YoutubeClone.VideoData',
                         'Elixir.YoutubeClone.VideoData.Video',
                         'Elixir.YoutubeCloneWeb',

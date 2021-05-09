@@ -4,6 +4,8 @@ defmodule YoutubeCloneWeb.VideoController do
   alias YoutubeClone.VideoData
   alias YoutubeClone.VideoData.Video
 
+  import YoutubeClone.Util, only: [build_video_path: 1]
+
   def index(conn, _params) do
     videos = VideoData.list_videos()
     render(conn, "index.html", videos: videos)
@@ -15,11 +17,13 @@ defmodule YoutubeCloneWeb.VideoController do
   end
 
   def create(conn, %{"video" => video_params}) do
-    changeset = VideoData.changeset(%VideoData{}, video_params)
+    changeset = Video.changeset(%Video{}, video_params)
 
-    case Repo.insert(changeset) do
+    case VideoData.insert_video(changeset) do
       {:ok, video} ->
         persist_file(video, video_params["video_file"])
+        IO.puts("video params")
+        IO.inspect(video_params["video_file"])
 
         conn
         |> put_flash(:info, "Video created successfully.")
@@ -31,10 +35,15 @@ defmodule YoutubeCloneWeb.VideoController do
   end
 
   defp persist_file(video, %{path: temp_path}) do
+    IO.puts("arquivo temporario")
+    IO.inspect(temp_path)
     video_path = build_video_path(video)
-    unless File.exists?(video_path) do
+    IO.puts("caminho video")
+    IO.inspect(video_path)
+    unless File.exists?(temp_path) do
+      IO.puts("entrei aqui")
       video_path |> Path.dirname() |> File.mkdir_p()
-      File.copy!(temp_path, video_path)
+      File.cp!(temp_path, video_path)
     end
   end
 
