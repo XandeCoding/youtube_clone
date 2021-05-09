@@ -22,8 +22,6 @@ defmodule YoutubeCloneWeb.VideoController do
     case VideoData.insert_video(changeset) do
       {:ok, video} ->
         persist_file(video, video_params["video_file"])
-        IO.puts("video params")
-        IO.inspect(video_params["video_file"])
 
         conn
         |> put_flash(:info, "Video created successfully.")
@@ -34,15 +32,9 @@ defmodule YoutubeCloneWeb.VideoController do
     end
   end
 
-  # TODO: Corrigir bug que deleta o arquivo temporário em temp_path
   defp persist_file(video, %{path: temp_path}) do
-    IO.puts("arquivo temporario")
-    IO.inspect(temp_path)
     video_path = build_video_path(video)
-    IO.puts("caminho video")
-    IO.inspect(video_path)
-    unless File.exists?(temp_path) do
-      IO.puts("entrei aqui")
+    unless File.exists?(video_path) do
       video_path |> Path.dirname() |> File.mkdir_p()
       File.cp!(temp_path, video_path)
     end
