@@ -34,6 +34,7 @@ defmodule YoutubeCloneWeb.VideoController do
     end
   end
 
+  # TODO: Corrigir bug que deleta o arquivo temporário em temp_path
   defp persist_file(video, %{path: temp_path}) do
     IO.puts("arquivo temporario")
     IO.inspect(temp_path)

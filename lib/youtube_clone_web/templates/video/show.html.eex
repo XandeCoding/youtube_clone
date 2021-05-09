@@ -27,6 +27,19 @@
     <%= @video.path %>
   </li>
 
+  <video id="video-player" class="video-js"
+    controls preload="none"
+    width="640" height="264"
+    data-setup="{}"
+  >
+    <source src="<%= Routes.watch_path(@conn, :show, @video) %>"
+      type='<%= @video.content_type %>' 
+    />
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider
+      upgrading to a web browser that
+    </p>
+  </video>
 </ul>
 
 <span><%= link "Edit", to: Routes.video_path(@conn, :edit, @video) %></span>
