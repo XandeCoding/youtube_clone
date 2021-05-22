@@ -2,7 +2,7 @@
 defmodule YoutubeClone.Util do
 
   def build_video_path(video) do
-    Application.get_env(:youtube_clone, :uploads_dir) 
+    Application.get_env(:youtube_clone, :disk1) 
     |> Path.join(video.path)
   end
 

@@ -75,4 +75,5 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
-config :youtube_clone, :uploads_dir, "/tmp/uploads"
+config :youtube_clone, :disk1, System.get_env("DISK1") || "temp/uploads"
+config :youtube_clone, :disk2, System.get_env("DISK2") || "temp/uploads"

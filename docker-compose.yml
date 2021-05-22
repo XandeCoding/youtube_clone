@@ -38,14 +38,15 @@ services:
       context: .
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.phoenix.rule=Host(`phoenix.localhost`)"
+      - "traefik.http.routers.phoenix.rule=host(`phoenix.localhost`)"
       - "traefik.http.routers.phoenix.entrypoints=web"
     environment:
-      MIX_ENV: dev
       MARIADB_USER: phoenix
       MARIADB_PASSWORD: phoenix
       MARIADB_DATABASE: phoenix
       MARIADB_HOST: mariaDB
+      DISK1: 'disk1'
+      DISK2: 'disk2'
     ports:
       - 4000:4000
     expose:
@@ -55,13 +56,12 @@ services:
     depends_on:
       - mariaDB
     volumes:
-      - disk1:/var/disk1
-      - disk2:/var/disk2
+      - ./disk1:/disk1
+      - ./disk2:/disk2
       - .:/app
 
 volumes:
   mariaDB_volume:
-  disk1:
-  disk2:
+
 networks:
   youtube_clone:
