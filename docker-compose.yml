@@ -1,18 +1,48 @@
 version: "3"
 services:
-    mariaDB:
-        image: mariadb
-        restart: always
-        ports:
-          - 3306:3306
-        volumes:
-          - mariaDB_volume:/var/lib/mysql
-        environment:
-          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "true"
-          MARIADB_RANDOM_ROOT_PASSWORD: "1"
-          MARIADB_DATABASE: phoenix
-          MARIADB_USER: phoenix
-          MARIADB_PASSWORD: phoenix
+  mariaDB:
+    image: mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    expose:
+      - "3306"
+    networks:
+      - youtube_clone
+    volumes:
+      - mariaDB_volume:/var/lib/mysql
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "true"
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+      MARIADB_DATABASE: phoenix
+      MARIADB_USER: phoenix
+      MARIADB_PASSWORD: phoenix
+
+  phoenix:
+    build:
+      context: .
+    environment:
+      MIX_ENV: dev
+      MARIADB_USER: phoenix
+      MARIADB_PASSWORD: phoenix
+      MARIADB_DATABASE: phoenix
+      MARIADB_HOST: mariaDB
+    ports:
+      - 4000:4000
+    expose:
+      - "4000"
+    networks:
+      - youtube_clone
+    depends_on:
+      - mariaDB
+    volumes:
+      - disk1:/var/disk1
+      - disk2:/var/disk2
+      - .:/app
 
 volumes:
   mariaDB_volume:
+  disk1:
+  disk2:
+networks:
+  youtube_clone:

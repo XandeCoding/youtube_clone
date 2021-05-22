@@ -2,10 +2,10 @@ use Mix.Config
 
 # Configure your database
 config :youtube_clone, YoutubeClone.Repo,
-  username: "phoenix",
-  password: "phoenix",
-  database: "phoenix",
-  hostname: "localhost",
+  username: System.get_env("MARIADB_USER") || "phoenix",
+  password: System.get_env("MARIADB_PASSWORD") || "phoenix",
+  database: System.get_env("MARIADB_DATABASE") || "phoenix",
+  hostname: System.get_env("MARIADB_HOST") || "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
