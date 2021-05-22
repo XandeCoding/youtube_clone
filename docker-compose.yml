@@ -1,12 +1,27 @@
 version: "3"
 services:
+  reverse-proxy:
+    image: traefik:v2.4
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - 80:80
+      - 8080:8080
+    networks:
+      - youtube_clone
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
   mariaDB:
     image: mariadb
     restart: always
     ports:
       - 3306:3306
     expose:
-      - "3306"
+      - 3306
     networks:
       - youtube_clone
     volumes:
@@ -21,6 +36,10 @@ services:
   phoenix:
     build:
       context: .
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phoenix.rule=Host(`phoenix.localhost`)"
+      - "traefik.http.routers.phoenix.entrypoints=web"
     environment:
       MIX_ENV: dev
       MARIADB_USER: phoenix
@@ -30,7 +49,7 @@ services:
     ports:
       - 4000:4000
     expose:
-      - "4000"
+      - 4000
     networks:
       - youtube_clone
     depends_on:
