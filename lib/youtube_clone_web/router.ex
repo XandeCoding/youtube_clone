@@ -16,9 +16,9 @@ defmodule YoutubeCloneWeb.Router do
   scope "/", YoutubeCloneWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
-    resources "/videos", VideoController
-    get "/watch/:id", WatchController, :show
+    # get "/", PageController, :index
+    resources "/", VideoController
+    get "/watch/:id", VideoController, :watch
   end
 
   # Other scopes may use custom stacks.

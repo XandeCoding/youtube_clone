@@ -4,7 +4,7 @@ defmodule YoutubeCloneWeb.VideoController do
   alias YoutubeClone.VideoData
   alias YoutubeClone.VideoData.Video
 
-  import YoutubeClone.Util, only: [build_video_path: 1]
+  import YoutubeClone.Util
 
   def index(conn, _params) do
     videos = VideoData.list_videos()
@@ -37,12 +37,26 @@ defmodule YoutubeCloneWeb.VideoController do
     unless File.exists?(video_path) do
       video_path |> Path.dirname() |> File.mkdir_p()
       File.cp!(temp_path, video_path)
+      persist_backup_file(video, video_path)
     end
+  end
+
+  defp persist_backup_file(video, video_path) do
+    backup_path = build_video_path(video, :disk2)
+    video_path
+    |> Path.dirname()
+    |> File.mkdir_p()
+    File.cp!(video_path, backup_path)
   end
 
   def show(conn, %{"id" => id}) do
     video = VideoData.get_video!(id)
     render(conn, "show.html", video: video)
+  end
+  
+  def watch(%{req_headers: headers} = conn, %{"id" => id}) do
+    video = VideoData.get_video!(id)
+    send_video(conn, headers, video)
   end
 
   def edit(conn, %{"id" => id}) do

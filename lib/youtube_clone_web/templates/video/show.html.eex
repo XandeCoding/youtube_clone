@@ -32,7 +32,7 @@
     width="640" height="264"
     data-setup="{}"
   >
-    <source src="<%= Routes.watch_path(@conn, :show, @video) %>"
+    <source src="<%= Routes.video_path(@conn, :watch, @video) %>"
       type='<%= @video.content_type %>' 
     />
     <p class="vjs-no-js">

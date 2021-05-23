@@ -2,14 +2,21 @@
 defmodule YoutubeClone.Util do
 
   def build_video_path(video) do
-    Application.get_env(:youtube_clone, :disk1) 
+    Application.get_env(:youtube_clone, :disk1)
+    |> Path.join(video.path)
+  end
+
+  def build_video_path(video, disk) do
+    Application.get_env(:youtube_clone, disk)
     |> Path.join(video.path)
   end
 
   def get_offset(headers) do
     case List.keyfind(headers, "range", 0) do
       {"range", "bytes=" <> start_pos} ->
-        String.split(start_pos, "-") |> hd |> String.to_integer
+        String.split(start_pos, "-")
+        |> hd
+        |> String.to_integer
       nil ->
         0
     end
@@ -21,8 +28,20 @@ defmodule YoutubeClone.Util do
     size
   end
 
+  def get_video_path(video) do
+    primary_path = build_video_path(video)
+
+    if File.exists?(primary_path) do
+      primary_path
+    else
+      build_video_path(video, :disk2)
+    end
+  end
+
+
   def send_video(conn, headers, video) do
-    video_path = build_video_path(video)
+    video_path = get_video_path(video)
+    IO.inspect(video_path)
     offset = get_offset(headers)
     file_size = get_file_size(video_path)
 
