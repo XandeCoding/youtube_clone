@@ -48,9 +48,7 @@ services:
       DISK1: 'disk1'
       DISK2: 'disk2'
     ports:
-      - 4000:4000
-    expose:
-      - 4000
+      - 4000-4002:4000
     networks:
       - youtube_clone
     depends_on:
@@ -59,6 +57,8 @@ services:
       - ./disk1:/disk1
       - ./disk2:/disk2
       - .:/app
+    deploy:
+      replicas: 3
 
 volumes:
   mariaDB_volume:
