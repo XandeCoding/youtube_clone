@@ -1,16 +1,15 @@
-FROM elixir:latest
+FROM elixir:latest as phoenix_multistage
 
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
-RUN apt-get install -y nodejs
-RUN apt-get install -y inotify-tools
-RUN mkdir /app
 COPY . /app
 WORKDIR /app
-RUN mix local.hex --force
-RUN mix local.rebar --force
-RUN mix deps.get --force
-RUN npm install --prefix ./assets
-RUN npm rebuild node-sass
-RUN mix do compile
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
+  && apt-get install -y nodejs \
+  && apt-get install -y inotify-tools \
+  && mix local.hex --force \
+  && mix local.rebar --force \
+  && mix deps.get --force \
+  && npm install --prefix ./assets \
+  && npm rebuild node-sass \
+  && mix do compile
 
 CMD mix phx.server
