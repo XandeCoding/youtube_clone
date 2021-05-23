@@ -2,7 +2,7 @@ FROM elixir:latest
 
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
 RUN apt-get install -y nodejs
-
+RUN apt-get install -y inotify-tools
 RUN mkdir /app
 COPY . /app
 WORKDIR /app
