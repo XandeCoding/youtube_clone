@@ -1,5 +1,5 @@
 
-defmodule YoutubeClone.Util do
+defmodule YoutubeClone.FileService do
 
   def build_video_path(video) do
     Application.get_env(:youtube_clone, :disk1)
@@ -38,17 +38,21 @@ defmodule YoutubeClone.Util do
     end
   end
 
+  def persist_file(video, %{path: temp_path}) do
+    video_path = build_video_path(video)
+    unless File.exists?(video_path) do
+      video_path |> Path.dirname() |> File.mkdir_p()
+      File.cp!(temp_path, video_path)
+      persist_backup_file(video, video_path)
+    end
+  end
 
-  def send_video(conn, headers, video) do
-    video_path = get_video_path(video)
-    IO.inspect(video_path)
-    offset = get_offset(headers)
-    file_size = get_file_size(video_path)
-
-    conn
-    |> Plug.Conn.put_resp_header("content-type", video.content_type)
-    |> Plug.Conn.put_resp_header("content-range", "bytes #{offset}-#{file_size-1}/#{file_size}")
-    |> Plug.Conn.send_file(206, video_path, offset, file_size - offset)
+  def persist_backup_file(video, video_path) do
+    backup_path = build_video_path(video, :disk2)
+    video_path
+    |> Path.dirname()
+    |> File.mkdir_p()
+    File.cp!(video_path, backup_path)
   end
 
 end

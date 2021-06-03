@@ -8,6 +8,8 @@ defmodule YoutubeClone.VideoData do
 
   alias YoutubeClone.VideoData.Video
 
+  import YoutubeClone.FileService
+
   @doc """
   Returns the list of videos.
 
@@ -36,6 +38,17 @@ defmodule YoutubeClone.VideoData do
 
   """
   def get_video!(id), do: Repo.get!(Video, id)
+
+  def send_video(conn, headers, video) do
+    video_path = get_video_path(video)
+    offset = get_offset(headers)
+    file_size = get_file_size(video_path)
+
+    conn
+    |> Plug.Conn.put_resp_header("content-type", video.content_type)
+    |> Plug.Conn.put_resp_header("content-range", "bytes #{offset}-#{file_size-1}/#{file_size}")
+    |> Plug.Conn.send_file(206, video_path, offset, file_size - offset)
+  end
 
   @doc """
   Creates a video.
