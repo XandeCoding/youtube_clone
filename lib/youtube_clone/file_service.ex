@@ -55,4 +55,19 @@ defmodule YoutubeClone.FileService do
     File.cp!(video_path, backup_path)
   end
 
+  def delete_file(path) do
+    path
+    |> Path.dirname()
+    File.rm!(path)
+  end
+
+  def delete_video_file(video) do
+    video_path = build_video_path(video)
+    video_backup_path = build_video_path(video, :disk2)
+
+    delete_file(video_path)
+    delete_file(video_backup_path)
+  end
+
 end
+

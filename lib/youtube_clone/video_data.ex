@@ -103,6 +103,7 @@ defmodule YoutubeClone.VideoData do
 
   """
   def delete_video(%Video{} = video) do
+    delete_video_file(video)
     Repo.delete(video)
   end
 
