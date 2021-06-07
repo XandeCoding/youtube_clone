@@ -1,20 +1,5 @@
 version: "3"
 services:
-  reverse-proxy:
-    image: traefik:v2.4
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-    ports:
-      - 80:80
-      - 8080:8080
-    networks:
-      - youtube_clone
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-
   mariaDB:
     image: mariadb
     restart: always
@@ -32,6 +17,21 @@ services:
       MARIADB_DATABASE: phoenix
       MARIADB_USER: phoenix
       MARIADB_PASSWORD: phoenix
+
+  reverse-proxy:
+    image: traefik:v2.4
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - 80:80
+      - 8080:8080
+    networks:
+      - youtube_clone
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
   phoenix:
     build:
