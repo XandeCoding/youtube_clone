@@ -1,3 +1,5 @@
 /deps
 mix.lock
 /_build/
+/assets/node_modules
+/assets/package-lock.json
